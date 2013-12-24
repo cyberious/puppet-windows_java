@@ -14,50 +14,85 @@
 #
 # Here you should define a list of variables that this module would require.
 #
-# [*sample_variable*]
-#   Explanation of how this variable affects the funtion of this class and if it
-#   has a default. e.g. "The parameter enc_ntp_servers must be set by the
-#   External Node Classifier as a comma separated list of hostnames." (Note,
-#   global variables should not be used in preference to class parameters  as of
-#   Puppet 2.6.)
+# [*install_name*]
+#   The name as it will appear in the Add or Remove Programes
+# [*default*]
+#   If this is the default Java install and will accordingly assign to JAVA_HOME and Environment Variable Path
+#   defaults to true
+# [*source*]
+#   URL to download the msi or executable from can be ftp as well as http
+# [*cookie_string*]
+#   String to bypass the accept license from Oracle
+# [*ensure*]
+#   Present or absent
 #
+# [*install_path*]
+#   The path to install java to, defaults to c:\Program Files\Java\jdk1.7.0_45
 # === Examples
 #
-#  class { jdk:
-#    
+#  windows_java::jdk{'JDK 7u45':
+#     install_name = 'Java SE Development Kit 7 Update 45 (64-bit)',
+#     ensure      = 'present',
+#     install_path= "c:\\java\\jdk1.7.0_45"
 #  }
 #
 # === Authors
 #
-# Author Name tfields@commercehub.com
+# Author Name Travis Fields
 #
 # === Copyright
 #
 # Copyright 2013 Your name here, unless otherwise noted.
 #
-class windows_java::jdk(
-	$version ,
-	$arch = 'i586',
-	$installName = 'Java(TM) SE Development Kit 6 Update 21',
-	$default = 'true',
-	$sourceDir = '\\mario\downloads\jdk') {
-  
-  $installDir = "D:\Java\jdk-${version}-${arch}"
+define windows_java::jdk (
+	$install_name    = 'Java SE Development Kit 7 Update 45 (64-bit)',
+	$default        = 'true',
+	$source         = 'http://download.oracle.com/otn-pub/java/jdk/7u45-b18/jdk-7u45-windows-x64.exe',
+    $install_path   = "C:\\Program Files\\Java\\jdk1.7.0_45",
+    $ensure         = "present",
+    $cookie_string  = "gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjdk-7u3-download-1501626.html;")
+{
 
-  package{$installName:
-  	provider        => windows,
-        ensure          => installed,
-        source          => "${sourceDir}\jdk-${version}-windows-${arch}.exe",
-        install_options => ['/s',{'INSTALLDIR'=> $installDir}]
-  }
+  if($ensure == "present"){
+    $filename = filename($source)
 
-  if($default){
-    windows_env{'JAVA_HOME':
-        ensure          => present,
-        value           => $installDir,
-        mergemode       => clobber,
-	require		=> Package[$installName];
+    $tempLocation = "C:\\temp\\${filename}"
+    $c1 = '$clnt = New-Object System.Net.WebClient;'
+    $c2 = $source ? {
+      /oracle\.com/ => "\$clnt.Headers.Add('user-agent','Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko');\$clnt.Headers.Add('Cookie','${cookie_string}');",
+      default => "",
     }
-    windows_env{'PATH=%JAVA_HOME%\bin':}
+    $c3 = "\$clnt.DownloadFile('${source}','${tempLocation}')"
+
+    exec{'Download-JDK':
+      provider  => powershell,
+      path  => $::path,
+      command   => "${c1}${c2}${c3}",
+      unless    => "if(Test-Path -Path \"${tempLocation}\" ){ exit 0 }else{exit 1}",
+      logoutput => true
+    }
+
+    package{$install_name:
+  	  provider        => windows,
+      ensure          => "present",
+      source          => $tempLocation,
+      install_options => ['/s',{'INSTALLDIR'=> $install_path}],
+      require => Exec['Download-JDK']
+    }
+
+    if($default){
+      windows_env{'JAVA_HOME':
+        ensure          => present,
+        value           => $install_path,
+        mergemode       => clobber,
+	    require		=> Package[$install_name];
+      }
+      windows_env{'PATH=%JAVA_HOME%\bin':}
+    }
+  }else{
+    package{$install_name:
+      provider        => windows,
+      ensure          => $ensure,
+    }
   }
 }
