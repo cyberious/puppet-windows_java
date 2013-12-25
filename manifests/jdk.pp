@@ -64,7 +64,7 @@ define windows_java::jdk (
     }
     $c3 = "\$clnt.DownloadFile('${source}','${tempLocation}')"
 
-    exec{'Download-JDK':
+    exec{"Download-${filename}":
       provider  => powershell,
       path  => $::path,
       command   => "${c1}${c2}${c3}",
@@ -77,7 +77,7 @@ define windows_java::jdk (
       ensure          => "present",
       source          => $tempLocation,
       install_options => ['/s',{'INSTALLDIR'=> $install_path}],
-      require => Exec['Download-JDK']
+      require => Exec["Download-${filename}"]
     }
 
     if($default){
