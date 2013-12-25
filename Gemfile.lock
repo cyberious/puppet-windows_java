@@ -9,7 +9,7 @@ GEM
     metaclass (0.0.1)
     mocha (0.10.5)
       metaclass (~> 0.0.1)
-    puppet (3.3.2)
+    puppet (3.4.0)
       facter (~> 1.6)
       hiera (~> 1.0)
       rgen (~> 0.6.5)
@@ -19,7 +19,7 @@ GEM
       rake
       rspec (>= 2.9.0)
       rspec-puppet (>= 0.1.1)
-    rake (10.1.0)
+    rake (10.1.1)
     rgen (0.6.6)
     rspec (2.11.0)
       rspec-core (~> 2.11.0)
