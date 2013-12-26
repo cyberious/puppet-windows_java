@@ -9,7 +9,7 @@ GEM
     metaclass (0.0.1)
     mocha (0.10.5)
       metaclass (~> 0.0.1)
-    puppet (3.3.2)
+    puppet (3.4.1)
       facter (~> 1.6)
       hiera (~> 1.0)
       rgen (~> 0.6.5)
@@ -33,7 +33,7 @@ GEM
       rspec
 
 PLATFORMS
-  x86-mingw32
+  ruby
 
 DEPENDENCIES
   facter
