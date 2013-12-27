@@ -1,4 +1,6 @@
 fixtures:
   repositories:
-    "powershell": "git@github.com:joshcooper/puppetlabs-powershell.git"
-    "windows_env": "git clone git@github.com:badgerious/puppet-windows-env.git"
+    windows_env: "git@github.com:badgerious/puppet-windows-env.git"
+    powershell: "git@github.com:joshcooper/puppetlabs-powershell.git"
+  symlinks:
+    windows_java: "#{source_dir}"
