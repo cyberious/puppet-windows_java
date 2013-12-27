@@ -1,4 +1,5 @@
 #Windows Oracle Java module for Puppet
+[![Build Status](https://travis-ci.org/cyberious/puppet-windows_java.png?branch=master)](https://travis-ci.org/cyberious/puppet-windows_java)
 
 Downloads and installs Oracle Java or any other version of Java that you may require
 
