@@ -57,19 +57,11 @@ define windows_java::jdk (
     $filename = filename($source)
 
     $tempLocation = "C:\\temp\\${filename}"
-    $c1 = '$clnt = New-Object System.Net.WebClient;'
-    $c2 = $source ? {
-      /oracle\.com/ => "\$clnt.Headers.Add('user-agent','Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko');\$clnt.Headers.Add('Cookie','${cookie_string}');",
-      default => "",
-    }
-    $c3 = "\$clnt.DownloadFile('${source}','${tempLocation}')"
 
-    exec{"Download-${filename}":
-      provider  => powershell,
-      path  => $::path,
-      command   => "${c1}${c2}${c3}",
-      unless    => "if(Test-Path -Path \"${tempLocation}\" ){ exit 0 }else{exit 1}",
-      logoutput => true
+    pget{"Download-${filename}":
+      source  => $source,
+      target  => "C:\\temp",
+      headerHash  => {'user-agent'=>'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko','Cookie'=> $cookie_string }
     }
 
     package{$install_name:

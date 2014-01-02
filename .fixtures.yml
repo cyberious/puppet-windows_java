@@ -2,5 +2,7 @@ fixtures:
   repositories:
     windows_env: "git://github.com/badgerious/puppet-windows-env.git"
     powershell: "git://github.com/joshcooper/puppetlabs-powershell.git"
+    pget: "git://github.com/cyberious/puppet-pget.git"
+    stdlib: "git://github.com/puppetlabs/puppetlabs-stdlib.git"
   symlinks:
     windows_java: "#{source_dir}"
