@@ -8,6 +8,6 @@ description 'Download and Install Oracle Java JDK'
 project_page 'https://github.com/cyberious/puppet-windows_java.git'
 
 ## Add dependencies, if any:
-dependency 'joshcooper/powershell', '>= 0.6.0'
+dependency 'joshcooper/powershell', '>= 0.0.6'
 dependency 'badgerious/windows_env', '>= 2.0.2'
 dependency 'cyberious/pget', '>= 0.1.2'
