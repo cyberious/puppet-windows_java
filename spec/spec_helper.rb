@@ -16,13 +16,13 @@ RSpec.configure do |c|
 end
 
 
-data_path = File.expand_path(File.join(__FILE__, '..', 'fixtures','hieradata'))
+data_path = File.expand_path(File.join(__FILE__, '..', 'fixtures','modules','hieradata'))
 shared_context "hieradata" do
   let(:hiera_config) do
     { :backends => ['rspec', 'yaml'],
       :hierarchy => ['common'],
       :yaml => {
-          :datadir => File.join(data_path)},
+          :datadir => data_path},
       :rspec => respond_to?(:hiera_data) ? hiera_data : {} }
   end
 end

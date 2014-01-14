@@ -17,8 +17,8 @@
 # [*install_name*]
 #   The name as it will appear in the Add or Remove Programes
 # [*default*]
-#   If this is the default Java install and will accordingly assign to JAVA_HOME and Environment Variable Path
-#   defaults to true
+#   If this is the default Java install and will accordingly assign
+#   to JAVA_HOME and Environment Variable Path defaults to true
 # [*source*]
 #   URL to download the msi or executable from can be ftp as well as http
 # [*cookie_string*]
@@ -44,16 +44,16 @@
 # Copyright 2013 Your name here, unless otherwise noted.
 #
 define windows_java::jdk (
-  $version        = "7u45",
-  $arch           = "x64",
-  $default        = 'true',
-  $ensure         = "present",
+  $version        = '7u45',
+  $arch           = 'x64',
+  $default        = true,
+  $ensure         = 'present',
   $install_name    = undef,
   $source         = undef,
   $install_path   = undef,
-  $cookie_string  = "gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjdk-7u3-download-1501626.html;")
+  $cookie_string  = 'gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjdk-7u3-download-1501626.html;')
 {
-  $version_info = hiera("${version}")
+  $version_info = hiera($version)
   $arch_info = $version_info[$arch]
 
   if ! $install_name {
@@ -62,7 +62,7 @@ define windows_java::jdk (
     $installName = $install_name
   }
 
-  if($ensure == "present"){
+  if($ensure == 'present'){
     if ! $source {
       $remoteSource = $arch_info['source']
     }else{
@@ -77,35 +77,38 @@ define windows_java::jdk (
     $filename = filename($remoteSource)
 
     $tempLocation = "C:\\temp\\${filename}"
-    $headerInfo = {'user-agent'=>'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko','Cookie'=> $cookie_string }
+    $headerInfo = {
+      'user-agent'
+        =>'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko'
+      ,'Cookie' => $cookie_string }
     debug("My header info is ${headerInfo}")
     pget{"Download-${filename}":
-      source  => $remoteSource,
-      target  => "C:\\temp",
+      source      => $remoteSource,
+      target      => "C:\\temp",
       headerHash  => $headerInfo
     }
 
     package{$installName:
-  	  provider        => windows,
-      ensure          => "present",
+      ensure          => $ensure,
+      provider        => windows,
       source          => $tempLocation,
       install_options => ['/s',{'INSTALLDIR'=> $installPath}],
-      require => Exec["Download-${filename}"]
+      require         => Exec["Download-${filename}"]
     }
 
     if($default){
       windows_env{'JAVA_HOME':
-        ensure          => present,
-        value           => $installPath,
-        mergemode       => clobber,
-	    require		=> Package[$installName];
+        ensure    => present,
+        value     => $installPath,
+        mergemode => clobber,
+        require   => Package[$installName];
       }
       windows_env{'PATH=%JAVA_HOME%\bin':}
     }
   }else{
     package{$installName:
-      provider        => windows,
       ensure          => $ensure,
+      provider        => windows,
     }
   }
 }
