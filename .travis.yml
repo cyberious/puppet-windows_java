@@ -14,6 +14,8 @@ branches:
   only:
     - master
 matrix:
+  allow_failures:
+  - env: PUPPET_GEM_VERSION="~> 3.4.0"
   exclude:
     - rvm: 2.0.0
       env: PUPPET_GEM_VERSION="~> 3.0.0"
