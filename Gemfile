@@ -7,6 +7,7 @@ group :development, :test do
   gem 'puppetlabs_spec_helper', :require => false
   gem 'rspec-puppet', :require => false
   gem 'puppet-lint'
+  gem 'hiera-puppet-helper', :require => false
 end
 
 facterversion = ENV['GEM_FACTER_VERSION']

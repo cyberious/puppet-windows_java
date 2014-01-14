@@ -25,7 +25,6 @@
 #   String to bypass the accept license from Oracle
 # [*ensure*]
 #   Present or absent
-#
 # [*install_path*]
 #   The path to install java to, defaults to c:\Program Files\Java\jdk1.7.0_45
 # === Examples
@@ -45,44 +44,66 @@
 # Copyright 2013 Your name here, unless otherwise noted.
 #
 define windows_java::jdk (
-	$install_name    = 'Java SE Development Kit 7 Update 45 (64-bit)',
-	$default        = 'true',
-	$source         = 'http://download.oracle.com/otn-pub/java/jdk/7u45-b18/jdk-7u45-windows-x64.exe',
-    $install_path   = "C:\\Program Files\\Java\\jdk1.7.0_45",
-    $ensure         = "present",
-    $cookie_string  = "gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjdk-7u3-download-1501626.html;")
+  $version        = "7u45",
+  $arch           = "x64",
+  $default        = 'true',
+  $ensure         = "present",
+  $install_name    = undef,
+  $source         = undef,
+  $install_path   = undef,
+  $cookie_string  = "gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjdk-7u3-download-1501626.html;")
 {
+  $version_info = hiera("${version}")
+  $arch_info = $version_info[$arch]
+
+  if ! $install_name {
+    $installName = $arch_info['install_name']
+  }else{
+    $installName = $install_name
+  }
 
   if($ensure == "present"){
-    $filename = filename($source)
-
-    $tempLocation = "C:\\temp\\${filename}"
-
-    pget{"Download-${filename}":
-      source  => $source,
-      target  => "C:\\temp",
-      headerHash  => {'user-agent'=>'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko','Cookie'=> $cookie_string }
+    if ! $source {
+      $remoteSource = $arch_info['source']
+    }else{
+      $remoteSource = $source
+    }
+    if ! $install_path {
+      $installPath = $arch_info['install_path']
+    }else{
+      $installPath = $install_path
     }
 
-    package{$install_name:
+    $filename = filename($remoteSource)
+
+    $tempLocation = "C:\\temp\\${filename}"
+    $headerInfo = {'user-agent'=>'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko','Cookie'=> $cookie_string }
+    debug("My header info is ${headerInfo}")
+    pget{"Download-${filename}":
+      source  => $remoteSource,
+      target  => "C:\\temp",
+      headerHash  => $headerInfo
+    }
+
+    package{$installName:
   	  provider        => windows,
       ensure          => "present",
       source          => $tempLocation,
-      install_options => ['/s',{'INSTALLDIR'=> $install_path}],
+      install_options => ['/s',{'INSTALLDIR'=> $installPath}],
       require => Exec["Download-${filename}"]
     }
 
     if($default){
       windows_env{'JAVA_HOME':
         ensure          => present,
-        value           => $install_path,
+        value           => $installPath,
         mergemode       => clobber,
-	    require		=> Package[$install_name];
+	    require		=> Package[$installName];
       }
       windows_env{'PATH=%JAVA_HOME%\bin':}
     }
   }else{
-    package{$install_name:
+    package{$installName:
       provider        => windows,
       ensure          => $ensure,
     }
