@@ -1,7 +1,6 @@
 require 'puppetlabs_spec_helper/module_spec_helper'
 require 'hiera-puppet-helper/rspec'
 require 'hiera'
-require 'puppet/indirector/hiera'
 
 
 def param_value(subject, type, title, param)
