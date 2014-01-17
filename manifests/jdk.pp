@@ -48,11 +48,12 @@ define windows_java::jdk (
   $arch           = 'x64',
   $default        = true,
   $ensure         = 'present',
-  $install_name    = undef,
+  $install_name   = undef,
   $source         = undef,
   $install_path   = undef,
-  $cookie_string  = 'gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjdk-7u3-download-1501626.html;')
-{
+  $cookie_string  = 'gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjdk-7u3-download-1501626.html;',
+  $temp_target    = 'C:\temp')
+ {
   $version_info = hiera($version)
   $arch_info = $version_info[$arch]
 
@@ -73,19 +74,27 @@ define windows_java::jdk (
     }else{
       $installPath = $install_path
     }
+    file{$temp_target:
+      ensure => directory,
+    }
 
     $filename = filename($remoteSource)
 
-    $tempLocation = "C:\\temp\\${filename}"
-    $headerInfo = {
-      'user-agent'
-        =>'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko'
-      ,'Cookie' => $cookie_string }
-    debug("My header info is ${headerInfo}")
+    $tempLocation = "${temp_target}\\${filename}"
+
+    Exec{
+      tries     => 3,
+      try_sleep => 30,
+      timeout   => 500,
+    }
+    $agent = 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko'
     pget{"Download-${filename}":
+      require     => File[$temp_target],
       source      => $remoteSource,
-      target      => "C:\\temp",
-      headerHash  => $headerInfo
+      target      => $temp_target,
+      headerHash  => {
+        'user-agent' => $agent,
+        'Cookie'     => $cookie_string }
     }
 
     package{$installName:

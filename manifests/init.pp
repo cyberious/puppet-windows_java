@@ -28,6 +28,6 @@
 #
 # Copyright 2013 Your name here, unless otherwise noted.
 #
-class windows_java{
+class windows_java {
   windows_java::jdk{$title:version=> '7u45'}
 }
