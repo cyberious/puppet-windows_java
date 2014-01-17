@@ -44,19 +44,23 @@
 # Copyright 2013 Your name here, unless otherwise noted.
 #
 define windows_java::jdk (
+  $ensure         = 'present',
   $version        = '7u45',
   $arch           = 'x64',
   $default        = true,
-  $ensure         = 'present',
   $install_name   = undef,
   $source         = undef,
   $install_path   = undef,
   $cookie_string  = 'gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjdk-7u3-download-1501626.html;',
-  $temp_target    = 'C:\temp')
- {
-  $version_info = hiera($version)
-  $arch_info = $version_info[$arch]
+  $temp_target    = 'C:\temp' ) {
 
+  $version_info = hiera($version)
+  if $::architecture in ['x86','i386'] and $arch == "x64"{
+    warn("Unable to install to install a 64 bit version of Java on a 32 bit system, installing 32 instead")
+    $arch_info = $version_info['x86']
+  }else{
+    $arch_info = $version_info[$arch]
+  }
   if ! $install_name {
     $installName = $arch_info['install_name']
   }else{
