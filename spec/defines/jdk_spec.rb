@@ -7,19 +7,9 @@ describe 'windows_java::jdk' do
     let(:title){'Install JDK'}
     let(:facts){{:operatingsystem => 'windows',:architecture => 'x64'}}
     include_context 'hieradata'
-    let(:hiera_data){{
-      '7u45'=> {
-        'x64'=>{
-          'install_name' => 'Java SE Development Kit 7 Update 45 (64-bit)',
-          'install_path' => 'C:\\Program Files\\Java\\jdk1.7.0_45',
-          'source'      => 'https://mydomain/jdk-7u45-windows-x64.exe'
-          }
-        }
-      }
-    }
     it {
       should contain_pget('Download-jdk-7u45-windows-x64.exe').with({
-        'source' => 'https://mydomain/jdk-7u45-windows-x64.exe',
+        'source' => 'http://download.oracle.com/otn-pub/java/jdk/7u45-b18/jdk-7u45-windows-x64.exe',
         'target' => 'C:\\temp'
         })
       should contain_package('Java SE Development Kit 7 Update 45 (64-bit)')

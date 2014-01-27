@@ -1,24 +1,36 @@
-7u45: {
-  x64: {
-    install_name: "Java SE Development Kit 7 Update 45 (64-bit)",
-    install_path: "C:\\Program Files\\Java\\jdk1.7.0_45",
-    source: "http://download.oracle.com/otn-pub/java/jdk/7u45-b18/jdk-7u45-windows-x64.exe"
-    },
-  x86: {
-    install_name: "Java SE Development Kit 7 Update 45",
-    install_path: "C:\\Program Files (x86)\\Java\\jdk1.7.0_45",
-    source: "http://download.oracle.com/otn-pub/java/jdk/7u45-b18/jdk-7u45-windows-i586.exe"
+windows_java: {
+  root_url: "http://download.oracle.com/otn-pub/java/jdk",
+  7u51: {
+    x64: {
+      install_name: "Java SE Development Kit 7 Update 51 (64-bit)",
+      install_path: "c:\\Program Files\\Java\\jdk1.7.0_51",
+      file_name: "jdk-7u51-windows-x64.exe"
     }
-  }
-7u25: {
-  x64: {
-    install_name: "Java SE Development Kit 7 Update 25 (64-bit)",
-    install_path: "C:\\Program Files\\Java\\jdk1.7.0_25",
-    source: "http://download.oracle.com/otn-pub/java/jdk/7u25-b17/jdk-7u25-windows-x64.exe"
+  },
+  7u45: {
+    build_number: "7u45-b18",
+    x64: {
+      install_name: "Java SE Development Kit 7 Update 45 (64-bit)",
+      install_path: "C:\\Program Files\\Java\\jdk1.7.0_45",
+      file_name: "jdk-7u45-windows-x64.exe"
+      },
+    x86: {
+      install_name: "Java SE Development Kit 7 Update 45",
+      install_path: "C:\\Program Files (x86)\\Java\\jdk1.7.0_45",
+      file_name: "jdk-7u45-windows-i586.exe"
+    }
+  },
+  7u25: {
+    build_number: "7u25-b17",
+    x64: {
+      install_name: "Java SE Development Kit 7 Update 25 (64-bit)",
+      install_path: "C:\\Program Files\\Java\\jdk1.7.0_25",
+      file_name: "jdk-7u25-windows-x64.exe"
     },
-  x86: {
-    install_name: "Java SE Development Kit 7 Update 25",
-    install_path: "C:\\Program Files (x86)\\Java\\jdk1.7.0_25",
-    source: "http://download.oracle.com/otn-pub/java/jdk/7u25-b17/jdk-7u25-windows-i586.exe"
+    x86: {
+      install_name: "Java SE Development Kit 7 Update 25",
+      install_path: "C:\\Program Files (x86)\\Java\\jdk1.7.0_25",
+      file_name: "jdk-7u25-windows-i586.exe"
+    }
   }
 }
