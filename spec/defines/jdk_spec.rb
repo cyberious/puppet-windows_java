@@ -5,7 +5,7 @@ require 'hiera-puppet-helper'
 describe 'windows_java::jdk' do
   describe 'when deploying with defaults' do
     let(:title){'Install JDK'}
-    let(:facts){{:operatingsystem => 'windows'}}
+    let(:facts){{:operatingsystem => 'windows',:architecture => 'x64'}}
     include_context 'hieradata'
     let(:hiera_data){{
       '7u45'=> {

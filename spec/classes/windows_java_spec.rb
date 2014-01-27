@@ -4,7 +4,7 @@ require 'rspec-puppet'
 describe 'windows_java' do
   include_context 'hieradata'
   let(:title) {'install jdk'}
-  let(:facts){{:operatingsystem => 'windows'}}
+  let(:facts){{:operatingsystem => 'windows',:architecture => 'x64'}}
 
   it {
     should contain_pget('Download-jdk-7u45-windows-x64.exe').with({
