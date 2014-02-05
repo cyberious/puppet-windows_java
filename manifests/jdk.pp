@@ -43,9 +43,9 @@
 #
 # Copyright 2013 Your name here, unless otherwise noted.
 #
-define windows_java::jdk (
+define windows_java::jdk(
   $ensure         = 'present',
-  $version        = '7u45',
+  $version        = '7u51',
   $arch           = 'x64',
   $default        = true,
   $install_name   = undef,
@@ -56,9 +56,9 @@ define windows_java::jdk (
 
   $windows_java = hiera('windows_java')
   $version_info = $windows_java[$version]
-  if $::architecture in ['x86','i386'] and $arch == "x64"{
-    warn("Unable to install to install a 64 bit version of Java on a 32 bit system, installing 32 instead")
-    $arch_info = $version_info['x86']
+  if $::architecture in ['x86','i386','i586'] and $arch == "x64"{
+    #warn("Unable to install to install a 64 bit version of Java on a 32 bit system, installing 32 instead")
+    $arch_info = $version_info['i586']
   }else{
     $arch_info = $version_info[$arch]
   }
@@ -71,12 +71,17 @@ define windows_java::jdk (
   if($ensure == 'present'){
     if ! $source {
       $root_url = $windows_java['root_url']
-      $build_number = $version_info['build_number']
+      if $source =~ /^puppet:\/\/\/.+/ {
+        $build_number = ""
+      }else{
+        $build_number = $version_info['build_number']
+      }
       $file_name = $arch_info['file_name']
       $remoteSource = "${root_url}/${build_number}/${file_name}"
     }else{
       $remoteSource = $source
     }
+    info("Downloading from ${remoteSource}")
     if ! $install_path {
       $installPath = $arch_info['install_path']
     }else{
@@ -96,6 +101,7 @@ define windows_java::jdk (
       timeout   => 500,
     }
     $agent = 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko'
+    debug("Downloading from source ${remoteSource} to ${temp_target}")
     pget{"Download-${filename}":
       require     => File[$temp_target],
       source      => $remoteSource,
@@ -110,7 +116,7 @@ define windows_java::jdk (
       provider        => windows,
       source          => $tempLocation,
       install_options => ['/s',{'INSTALLDIR'=> $installPath}],
-      require         => Exec["Download-${filename}"]
+      require         => Pget["Download-${filename}"]
     }
 
     if($default){
