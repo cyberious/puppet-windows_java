@@ -44,15 +44,18 @@
 # Copyright 2013 Your name here, unless otherwise noted.
 #
 define windows_java::jdk(
-  $ensure         = 'present',
-  $version        = '7u51',
-  $arch           = 'x64',
-  $default        = true,
-  $install_name   = undef,
-  $source         = undef,
-  $install_path   = undef,
-  $cookie_string  = 'gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjdk-7u3-download-1501626.html;',
-  $temp_target    = 'C:\temp' ) {
+  $ensure           = 'present',
+  $version          = '7u51',
+  $arch             = 'x64',
+  $default          = true,
+  $install_name     = undef,
+  $source           = undef,
+  $install_path     = undef,
+  $jre_install_path = undef,
+  $cookie_string    = 'gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjdk-7u3-download-1501626.html;',
+  $temp_target      = 'C:\temp' ) {
+
+
 
   $windows_java = hiera('windows_java')
   $version_info = $windows_java[$version]
@@ -69,6 +72,7 @@ define windows_java::jdk(
   }
 
   if($ensure == 'present'){
+    validate_bool($default)
     if ! $source {
       $root_url = $windows_java['root_url']
       if $source =~ /^puppet:\/\/\/.+/ {
@@ -86,6 +90,11 @@ define windows_java::jdk(
       $installPath = $arch_info['install_path']
     }else{
       $installPath = $install_path
+    }
+    if ! $jre_install_path {
+      $jreInstallPath = $arch_info['jre_install_path']
+    }else{
+      $jreInstallPath = $jre_install_path
     }
     file{$temp_target:
       ensure => directory,
@@ -119,7 +128,7 @@ define windows_java::jdk(
       require         => Pget["Download-${filename}"]
     }
 
-    if($default){
+    if($default == true){
       windows_env{'JAVA_HOME':
         ensure    => present,
         value     => $installPath,

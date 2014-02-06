@@ -5,11 +5,13 @@ windows_java: {
     x64: {
       install_name: "Java SE Development Kit 7 Update 51 (64-bit)",
       install_path: "C:\\Program Files\\Java\\jdk1.7.0_51",
+      jre_install_path: "C:\\Program Files\\Java\\jre7",
       file_name: "jdk-7u51-windows-x64.exe"
     },
     i586: {
       install_name: "Java SE Development Kit 7 Update 51 ",
       install_path: "C:\\Program Files (i586)\\Java\\jdk1.7.0_51",
+      jre_install_path: "C:\\Program Files\\Java\\jre7",
       file_name: "jdk-7u51-windows-x64.exe"
     }
   },
@@ -18,11 +20,13 @@ windows_java: {
     x64: {
       install_name: "Java SE Development Kit 7 Update 45 (64-bit)",
       install_path: "C:\\Program Files\\Java\\jdk1.7.0_45",
+      jre_install_path: "C:\\Program Files\\Java\\jre7",
       file_name: "jdk-7u45-windows-x64.exe"
       },
     i586: {
       install_name: "Java SE Development Kit 7 Update 45",
       install_path: "C:\\Program Files (i586)\\Java\\jdk1.7.0_45",
+      jre_install_path: "C:\\Program Files\\Java\\jre7",
       file_name: "jdk-7u45-windows-i586.exe"
     }
   },
@@ -31,11 +35,13 @@ windows_java: {
     x64: {
       install_name: "Java SE Development Kit 7 Update 25 (64-bit)",
       install_path: "C:\\Program Files\\Java\\jdk1.7.0_25",
+      jre_install_path: "C:\\Program Files\\Java\\jre7",
       file_name: "jdk-7u25-windows-x64.exe"
     },
     i586: {
       install_name: "Java SE Development Kit 7 Update 25",
       install_path: "C:\\Program Files (i586)\\Java\\jdk1.7.0_25",
+      jre_install_path: "C:\\Program Files\\Java\\jre7",
       file_name: "jdk-7u25-windows-i586.exe"
     }
   }
