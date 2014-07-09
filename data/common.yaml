@@ -1,5 +1,20 @@
 windows_java: {
   root_url: "http://download.oracle.com/otn-pub/java/jdk",
+  7u60: {
+    build_number: "7u60-b19",
+    x64: {
+      install_name: "Java SE Development Kit 7 Update 60 (64-bit)",
+      install_path: "C:\\Program Files\\Java\\jdk1.7.0_60",
+      jre_install_path: "C:\\Program Files\\Java\\jre7",
+      file_name: "jdk-7u60-windows-x64.exe"
+    },
+    i586: {
+      install_name: "Java SE Development Kit 7 Update 60",
+      install_path: "C:\\Program Files (i586)\\Java\\jdk1.7.0_60",
+      jre_install_path: "C:\\Program Files\\Java\\jre7",
+      file_name: "jdk-7u60-windows-i586.exe"
+    }
+  },
   7u51: {
     build_number: "7u51-b13",
     x64: {
@@ -9,10 +24,10 @@ windows_java: {
       file_name: "jdk-7u51-windows-x64.exe"
     },
     i586: {
-      install_name: "Java SE Development Kit 7 Update 51 ",
+      install_name: "Java SE Development Kit 7 Update 51",
       install_path: "C:\\Program Files (i586)\\Java\\jdk1.7.0_51",
       jre_install_path: "C:\\Program Files\\Java\\jre7",
-      file_name: "jdk-7u51-windows-x64.exe"
+      file_name: "jdk-7u51-windows-i586.exe"
     }
   },
   7u45: {
