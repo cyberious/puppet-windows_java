@@ -52,7 +52,7 @@ define windows_java::jdk(
   $source           = undef,
   $install_path     = undef,
   $jre_install_path = undef,
-  $cookie_string    = 'gpw_e24=http%3A%2F%2Fwww.oracle.com%2Ftechnetwork%2Fjava%2Fjavase%2Fdownloads%2Fjdk-7u3-download-1501626.html;',
+  $cookie_string    = 'oraclelicense=accept-securebackup-cookie;gpw_e24=http://edelivery.oracle.com',
   $temp_target      = 'C:\temp' ) {
 
 
