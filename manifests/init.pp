@@ -28,9 +28,9 @@
 #
 # Copyright 2013 Your name here, unless otherwise noted.
 #
-class windows_java ($version = '7u60',$ach = 'x64',$default = true,$ensure = present) {
+class windows_java ($version = '7u60',$arch = 'x64',$default = true,$ensure = present) {
 
-  windows_java::jdk{$title:
+  windows_java::jdk{ $title:
     version => $version,
     default => $default,
     arch    => $arch,

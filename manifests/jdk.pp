@@ -56,18 +56,17 @@ define windows_java::jdk(
   $temp_target      = 'C:\temp' ) {
 
 
-
-  $windows_java = hiera('windows_java')
+  $windows_java = hiera_hash('java_ver_lookup', { })
   $version_info = $windows_java[$version]
-  if $::architecture in ['x86','i386','i586'] and $arch == "x64"{
-    #warn("Unable to install to install a 64 bit version of Java on a 32 bit system, installing 32 instead")
+  if $::architecture in ['x86','i386','i586'] and $arch == 'x64'{
+  #warn("Unable to install to install a 64 bit version of Java on a 32 bit system, installing 32 instead")
     $arch_info = $version_info['i586']
-  }else{
+  } else{
     $arch_info = $version_info[$arch]
   }
   if ! $install_name {
     $installName = $arch_info['install_name']
-  }else{
+  } else{
     $installName = $install_name
   }
 
@@ -75,28 +74,28 @@ define windows_java::jdk(
     validate_bool($default)
     if ! $source {
       $root_url = $windows_java['root_url']
-      if $source =~ /^puppet:\/\/\/.+/ {
-        $build_number = ""
-      }else{
+      if $source =~ /^puppet:/ {
+        $build_number = ''
+      } else{
         $build_number = $version_info['build_number']
       }
       $file_name = $arch_info['file_name']
       $remoteSource = "${root_url}/${build_number}/${file_name}"
-    }else{
+    } else{
       $remoteSource = $source
     }
     info("Downloading from ${remoteSource}")
     if ! $install_path {
       $installPath = $arch_info['install_path']
-    }else{
+    } else{
       $installPath = $install_path
     }
     if ! $jre_install_path {
       $jreInstallPath = $arch_info['jre_install_path']
-    }else{
+    } else{
       $jreInstallPath = $jre_install_path
     }
-    file{$temp_target:
+    file{ $temp_target:
       ensure => directory,
     }
 
@@ -110,37 +109,41 @@ define windows_java::jdk(
       timeout   => 500,
     }
     $agent = 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko'
+    $header_hash = {
+      'user-agent' => $agent,
+      'Cookie'     => $cookie_string
+    }
     debug("Downloading from source ${remoteSource} to ${temp_target}")
-    pget{"Download-${filename}":
-      require     => File[$temp_target],
-      source      => $remoteSource,
-      target      => $temp_target,
-      headerHash  => {
-        'user-agent' => $agent,
-        'Cookie'     => $cookie_string }
+
+    pget{ "Download-${filename}":
+      source     => $remoteSource,
+      target     => $temp_target,
+      headerHash => $header_hash,
+      require    => File[$temp_target]
     }
 
-    package{$installName:
+    $install_hash =  { 'INSTALLDIR' => $installPath }
+    package{ $installName:
       ensure          => $ensure,
       provider        => windows,
       source          => $tempLocation,
-      install_options => ['/s',{'INSTALLDIR'=> $installPath}],
+      install_options => ['/s', $install_hash],
       require         => Pget["Download-${filename}"]
     }
 
     if($default == true){
-      windows_env{'JAVA_HOME':
+      windows_env{ 'JAVA_HOME':
         ensure    => present,
         value     => $installPath,
         mergemode => clobber,
         require   => Package[$installName];
       }
-      windows_env{'PATH=%JAVA_HOME%\bin':}
+      windows_env{ 'PATH=%JAVA_HOME%\bin': }
     }
-  }else{
-    package{$installName:
-      ensure          => $ensure,
-      provider        => windows,
+  } else{
+    package{ $installName:
+      ensure   => $ensure,
+      provider => windows,
     }
   }
 }

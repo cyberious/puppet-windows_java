@@ -9,19 +9,22 @@ end
 RSpec.configure do |c|
   c.mock_framework = :rspec
   baseFile = File.dirname(__FILE__)
-  c.module_path  = File.expand_path(File.join(baseFile, 'fixtures/modules'))
+  c.module_path = File.expand_path(File.join(baseFile, 'fixtures/modules'))
   # Using an empty site.pp file to avoid: https://github.com/rodjek/rspec-puppet/issues/15
-  c.manifest_dir = File.expand_path(File.join(baseFile,'fixtures/manifests'))
+  c.manifest_dir = File.expand_path(File.join(baseFile, 'fixtures/manifests'))
 end
 
 
-data_path = File.expand_path(File.join(__FILE__,'..','fixtures','modules','hieradata'))
-shared_context "hieradata" do
+data_path = File.expand_path(File.join(__FILE__, '..', 'fixtures'))
+shared_context "hiera_config" do
   let(:hiera_config) do
-    { :backends => ['rspec', 'yaml'],
-      :hierarchy => ['common'],
-      :yaml => {
-          :datadir => data_path},
-      :rspec => respond_to?(:hiera_data) ? hiera_data : {} }
+    {:backends => ['rspec', 'yaml', 'json'],
+     :hierarchy => ['common', 'test_data'],
+     :yaml => {
+         :datadir => File.join(data_path, 'modules', 'hieradata')},
+     :json => {
+         :datadir => File.join(data_path, '..', 'data')
+     },
+     :rspec => respond_to?(:hiera_data) ? hiera_data : {}}
   end
 end
