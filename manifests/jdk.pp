@@ -90,7 +90,7 @@ define windows_java::jdk(
     } else{
       $installPath = $install_path
     }
-    if ! $jre_install_path {
+    if ! $jre_install_path and $arch_info {
       $jreInstallPath = $arch_info['jre_install_path']
     } else{
       $jreInstallPath = $jre_install_path
