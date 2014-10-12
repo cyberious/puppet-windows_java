@@ -53,18 +53,18 @@ define windows_java::jdk(
   $install_path     = undef,
   $jre_install_path = undef,
   $cookie_string    = 'oraclelicense=accept-securebackup-cookie;gpw_e24=http://edelivery.oracle.com',
-  $temp_target      = 'C:\temp' ) {
+  $temp_target      = 'C:\temp',) {
 
 
   $windows_java = hiera_hash('java_ver_lookup', { })
   $version_info = $windows_java[$version]
-  if $::architecture in ['x86','i386','i586'] and $arch == 'x64'{
+  if $::architecture in ['x86','i386','i586'] and $arch == 'x64' and $version_info {
   #warn("Unable to install to install a 64 bit version of Java on a 32 bit system, installing 32 instead")
     $arch_info = $version_info['i586']
-  } else{
+  } elsif $version_info {
     $arch_info = $version_info[$arch]
   }
-  if ! $install_name {
+  if ! $install_name  and $arch_info {
     $installName = $arch_info['install_name']
   } else{
     $installName = $install_name
