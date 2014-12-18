@@ -34,5 +34,6 @@ class windows_java ($version = '7u60',$arch = 'x64',$default = true,$ensure = pr
     version => $version,
     default => $default,
     arch    => $arch,
+    ensure  => $ensure,
   }
 }
