@@ -43,106 +43,102 @@
 #
 # Copyright 2013 Your name here, unless otherwise noted.
 #
-define windows_java::jdk(
-  $ensure           = 'present',
-  $version          = '7u51',
-  $arch             = 'x64',
-  $default          = true,
-  $install_name     = undef,
-  $source           = undef,
-  $install_path     = undef,
-  $jre_install_path = undef,
-  $cookie_string    = 'oraclelicense=accept-securebackup-cookie;gpw_e24=http://edelivery.oracle.com',
-  $temp_target      = 'C:\temp',) {
+define windows_java::jdk  (
+  $ensure            = 'present',
+  $version           = $name,
+  $arch              = $::architecture,
+  $build_number_hash = undef,
+  $cookie_string     = undef,
+  $default           = true,
+  $install_name      = undef,
+  $install_path      = undef,
+  $source            = undef,
+  $temp_target       = $::windows_java_temp,) {
+  include windows_java::params
 
-
-  $windows_java = hiera_hash('java_ver_lookup', { })
-  $version_info = $windows_java[$version]
-  if $::architecture in ['x86','i386','i586'] and $arch == 'x64' and $version_info {
-  #warn("Unable to install to install a 64 bit version of Java on a 32 bit system, installing 32 instead")
-    $arch_info = $version_info['i586']
-  } elsif $version_info {
-    $arch_info = $version_info[$arch]
+  $_splitversion = split($version,'[uU]')
+  $_major = $_splitversion[0]
+  $_update =  count($_splitversion) ? {
+    2       => $_splitversion[1],
+    default => ''
   }
-  if ! $install_name  and $arch_info {
-    $installName = $arch_info['install_name']
-  } else{
-    $installName = $install_name
+
+  $_build_hash = pick($build_number_hash,$::windows_java::params::build_numbers_hash)
+  $_cookie_string = pick($cookie_string, $::windows_java::params::cookie_string)
+
+  $_arch_version = $arch ? {
+    /^(x86|i586|i386)$/ => 'i586',
+    /x(86_|)64/         => 'x64',
+    default             => fail('Must be one of i586 or x64'),
+  }
+
+  if $install_name == undef {
+    $_installBase = "${::windows_java::params::jdk_base_install_name} ${_major}"
+    $_installUpdate =  $_update ?{
+      /\d+/   => " Update ${_update}",
+      default => '',
+    }
+    $_installArch =  $_arch_version ? {
+      'x64'   => ' (64-bit)',
+      default => '',
+    }
+    $_installName = "${_installBase}${_installUpdate}${_installArch}"
+  } else {
+    $_installName = $install_name
+  }
+
+  if has_key($_build_hash, $version) {
+    $_build_number = join([$version, '-', $_build_hash[$version]],'')
+  }
+  elsif $source {
+    $_build_number = ''
+  }
+  else {
+    fail("Unable to determine version ${version} from build_numbers_hash")
   }
 
   if($ensure == 'present'){
+    if $source == undef {
+      $_filename = "jdk-${version}-windows-${_arch_version}.exe"
+      $_remote_source = "${windows_java::params::root_url}/${_build_number}/${_filename}"
+    } else{
+      $_remote_source = $source
+      $_filename = filename($_remote_source)
+    }
+  ##
+  # Install Paths
+  #
+  ##
+    if $::architecture == 'x86_64' and $_arch_version == 'i586'{
+      $_base_install_path = 'C:\Program Files (x86)\Java'
+    } else{
+      $_base_install_path = 'C:\Program Files\Java'
+    }
+    $_installPath = $install_path ? {
+      undef   => "${_base_install_path}\\jdk1.${_major}.0_${_update}",
+      default => $install_path,
+    }
+
+    $_tempLocation = "${temp_target}\\${_filename}"
+
+    windows_java::download { "Download-${_filename}":
+      source      => $_remote_source,
+      filename    => $_filename,
+      temp_target => $temp_target,
+    }->
+    windows_java::install{ $_installName:
+      ensure       => $ensure,
+      source       => $_tempLocation,
+      install_path => $_installPath,
+    }
     validate_bool($default)
-    if ! $source {
-      $root_url = $windows_java['root_url']
-      if $source =~ /^puppet:/ {
-        $build_number = ''
-      } else{
-        $build_number = $version_info['build_number']
-      }
-      $file_name = $arch_info['file_name']
-      $remoteSource = "${root_url}/${build_number}/${file_name}"
-    } else{
-      $remoteSource = $source
-    }
-    info("Downloading from ${remoteSource}")
-    if ! $install_path {
-      $installPath = $arch_info['install_path']
-    } else{
-      $installPath = $install_path
-    }
-    if ! $jre_install_path and $arch_info {
-      $jreInstallPath = $arch_info['jre_install_path']
-    } else{
-      $jreInstallPath = $jre_install_path
-    }
-    file{ $temp_target:
-      ensure  => directory,
-      replace => no,
-    }
-
-    $filename = filename($remoteSource)
-
-    $tempLocation = "${temp_target}\\${filename}"
-
-    Exec{
-      tries     => 3,
-      try_sleep => 30,
-      timeout   => 500,
-    }
-    $agent = 'Mozilla/5.0 (Windows NT 6.3; Trident/7.0; rv:11.0) like Gecko'
-    $header_hash = {
-      'user-agent' => $agent,
-      'Cookie'     => $cookie_string
-    }
-    debug("Downloading from source ${remoteSource} to ${temp_target}")
-
-    pget{ "Download-${filename}":
-      source     => $remoteSource,
-      target     => $temp_target,
-      headerHash => $header_hash,
-      require    => File[$temp_target]
-    }
-
-    $install_hash =  { 'INSTALLDIR' => $installPath }
-    package{ $installName:
-      ensure          => $ensure,
-      provider        => windows,
-      source          => $tempLocation,
-      install_options => ['/s', $install_hash],
-      require         => Pget["Download-${filename}"]
-    }
-
     if($default == true){
-      windows_env{ 'JAVA_HOME':
-        ensure    => present,
-        value     => $installPath,
-        mergemode => clobber,
-        require   => Package[$installName];
-      }
-      windows_env{ 'PATH=%JAVA_HOME%\bin': }
+      class{ 'windows_java::java_home':
+        install_path => $_installPath,
+        require      => Windows_java::Install[$_installName] }
     }
   } else{
-    package{ $installName:
+    package{ $_installName:
       ensure   => $ensure,
       provider => windows,
     }
