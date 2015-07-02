@@ -8,6 +8,21 @@
   "project_page": "https://github.com/cyberious/puppet-windows_java.git",
   "issues_url": "https://github.com/cyberious/puppet-windows_java/issues",
   "description": "Download and Install Oracle Java JDK",
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Windows",
+      "operatingsystemrelease": [
+	"7",
+        "8",
+        "Server 2003",
+        "Server 2003 R2",
+        "Server 2008",
+        "Server 2008 R2",
+        "Server 2012",
+        "Server 2012 R2"
+      ]
+    }
+  ],
   "dependencies": [
     {
       "name": "badgerious/windows_env",
