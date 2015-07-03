@@ -1,6 +1,6 @@
 {
   "name": "cyberious-windows_java",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "cyberious",
   "summary": "Windows Oracle Java",
   "license": "Apache-2.0",
@@ -10,13 +10,14 @@
   "description": "Download and Install Oracle Java JDK",
   "tags": [
     "java",
-    "jdk"
+    "jdk",
+    "oracle"
   ],
   "operatingsystem_support": [
     {
       "operatingsystem": "Windows",
       "operatingsystemrelease": [
-	"7",
+        "7",
         "8",
         "Server 2003",
         "Server 2003 R2",

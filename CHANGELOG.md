@@ -1,3 +1,9 @@
+##2015-07-03 - Release 1.0.1
+
+####Summary
+
+README and metadata.json updates
+
 ##2015-07-03 - Release 1.0.0
 
 ####Summary 
