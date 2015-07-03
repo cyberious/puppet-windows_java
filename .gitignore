@@ -30,7 +30,7 @@ local.properties
 #################
 ## IntelliJ
 #################
-.idea/
+.idea/*
 *.iml
 
 #################

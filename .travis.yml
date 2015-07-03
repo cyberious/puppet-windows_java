@@ -1,25 +1,27 @@
+---
+sudo: false
 language: ruby
-before_script:
-  - echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config  
-script: "bundle exec rake spec"
-rvm:
-  - 1.9.3
-  - 2.0.0
-env:
-  - PUPPET_GEM_VERSION="~> 3.1.0"
-  - PUPPET_GEM_VERSION="~> 3.2.0"
-  - PUPPET_GEM_VERSION="~> 3.3.0"
-  - PUPPET_GEM_VERSION="~> 3.4.0"
-branches:
-  only:
-    - master
+bundler_args: --without system_tests
+script: "bundle exec rake validate && bundle exec rake lint && bundle exec rake spec SPEC_OPTS='--color --format documentation'"
 matrix:
+  fast_finish: true
+  include:
+  - rvm: 1.9.3
+    env: PUPPET_GEM_VERSION="~> 3.4.0"
+  - rvm: 2.0.0
+    env: PUPPET_GEM_VERSION="~> 3.4.0"
+  - rvm: 1.9.3
+    env: PUPPET_GEM_VERSION="~> 3.6.0"
+  - rvm: 2.0.0
+    env: PUPPET_GEM_VERSION="~> 3.6.0"
+  - rvm: 1.9.3
+    env: PUPPET_GEM_VERSION="~> 3.8.0"
+  - rvm: 2.0.0
+    env: PUPPET_GEM_VERSION="~> 3.8.0"
+  - rvm: 2.0.0
+    env: PUPPET_GEM_VERSION="~> 3.8.0" FUTURE_PARSER="yes"
   allow_failures:
-  - env: PUPPET_GEM_VERSION="~> 3.4.0"
-  exclude:
-    - rvm: 2.0.0
-      env: PUPPET_GEM_VERSION="~> 3.0.0"
-    - rvm: 2.0.0
-      env: PUPPET_GEM_VERSION="~> 3.1.0"
+    - rvm: 2.1.5
+      env: PUPPET_GEM_VERSION="~> 4.0"
 notifications:
   email: false

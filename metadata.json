@@ -1,16 +1,51 @@
 {
   "name": "cyberious-windows_java",
-  "version": "0.3.0",
+  "version": "1.0.2",
   "author": "cyberious",
   "summary": "Windows Oracle Java",
-  "license": "Apache License, Version 2.0",
+  "license": "Apache-2.0",
   "source": "git@github.com:cyberious/puppet-windows_java.git",
   "project_page": "https://github.com/cyberious/puppet-windows_java.git",
   "issues_url": "https://github.com/cyberious/puppet-windows_java/issues",
   "description": "Download and Install Oracle Java JDK",
+  "tags": [
+    "java",
+    "jdk",
+    "oracle"
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "Windows",
+      "operatingsystemrelease": [
+        "7",
+        "8",
+        "Server 2003",
+        "Server 2003 R2",
+        "Server 2008",
+        "Server 2008 R2",
+        "Server 2012",
+        "Server 2012 R2"
+      ]
+    }
+  ],
+  "requirements": [
+    {
+      "name": "puppet",
+      "version_requirement": ">= 3.3.0 < 5.0.0"
+    }
+  ],
   "dependencies": [
-    {"name":"badgerious/windows_env","version_requirement":">= 2.0.2"},
-    {"name":"cyberious/pget","version_requirement":">= 0.1.2"},
-    {"name":"ripienaar/module_data","version_requirement":">= 0.0.1"}
+    {
+      "name": "badgerious/windows_env",
+      "version_requirement": ">= 2.0.2"
+    },
+    {
+      "name": "cyberious/pget",
+      "version_requirement": ">= 1.0.0 < 2.0.0"
+    },
+    {
+      "name": "puppetlabs/stdlib",
+      "version_requirement": ">= 4.5.1 < 5.0.0"
+    }
   ]
 }
