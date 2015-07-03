@@ -1,12 +1,9 @@
 source "https://rubygems.org"
 
 group :development, :test do
-  gem 'rake'
-  gem 'rspec', "~> 2.14.0", :require => false
-  gem 'mocha', "~> 0.10.5", :require => false
+  gem 'rspec', "~> 3.0", :require => false
   gem 'puppetlabs_spec_helper', :require => false
-  gem 'rspec-puppet', :require => false
-  gem 'puppet-lint'
+  gem 'pry'
 end
 
 group :system_tests do
