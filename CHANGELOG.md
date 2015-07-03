@@ -1,3 +1,9 @@
+##2015-07-03 - Release 1.0.2
+
+####Summary
+
+README syntax fixes
+
 ##2015-07-03 - Release 1.0.1
 
 ####Summary
