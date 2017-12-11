@@ -43,7 +43,7 @@
 #
 # Copyright 2013 Your name here, unless otherwise noted.
 #
-define windows_java::jdk  (
+define windows_java::jdk (
   $ensure            = 'present',
   $version           = $name,
   $arch              = $::architecture,
@@ -54,7 +54,7 @@ define windows_java::jdk  (
   $install_path      = undef,
   $source            = undef,
   $temp_target       = $::windows_java_temp,) {
-  include windows_java::params
+  include ::windows_java::params
 
   $_splitversion = split($version,'[uU]')
   $_major = $_splitversion[0]
@@ -121,10 +121,11 @@ define windows_java::jdk  (
 
     $_tempLocation = "${temp_target}\\${_filename}"
 
-    windows_java::download { "Download-${_filename}":
-      source      => $_remote_source,
-      filename    => $_filename,
-      temp_target => $temp_target,
+    download_file { "download-${_filename}":
+      url                   => $_remote_source,
+      destination_directory => $temp_target,
+      destination_file      => $_filename,
+      cookies               => [$::windows_java::params::cookie_string],
     }->
     windows_java::install{ $_installName:
       ensure       => $ensure,

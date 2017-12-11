@@ -36,12 +36,12 @@
   ],
   "dependencies": [
     {
-      "name": "badgerious/windows_env",
-      "version_requirement": ">= 2.0.2"
+      "name": "puppet/windows_env",
+      "version_requirement": ">= 2.3.0"
     },
     {
-      "name": "cyberious/pget",
-      "version_requirement": ">= 1.0.0 < 2.0.0"
+      "name": "puppet/download_file",
+      "version_requirement": ">= 2.0.0 < 4.0.0"
     },
     {
       "name": "puppetlabs/stdlib",

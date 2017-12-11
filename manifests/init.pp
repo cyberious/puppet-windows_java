@@ -29,9 +29,9 @@
 # Copyright 2013 Your name here, unless otherwise noted.
 #
 class windows_java (
-  $ensure = 'present',
+  $ensure  = 'present',
   $version = '8u45',
-  $arch = $::architecture,
+  $arch    = $::architecture,
   $default = true,
 ) {
   windows_java::jdk{ $name:
