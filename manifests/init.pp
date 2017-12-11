@@ -40,7 +40,7 @@ class windows_java (
   $source            = undef,
   $temp_target       = $::windows_java_temp,
 ) {
-  windows_java::jdk{ "install_java_${::$version}":
+  windows_java::jdk{ "install_java_${version}":
     ensure            => $ensure,
     version           => $version,
     arch              => $arch,
