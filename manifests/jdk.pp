@@ -53,7 +53,10 @@ define windows_java::jdk (
   $install_name      = undef,
   $install_path      = undef,
   $source            = undef,
-  $temp_target       = $::windows_java_temp,) {
+  $temp_target       = $::windows_java_temp,
+) {
+
+  validate_legacy(Boolean, 'validate_bool', $default)
   include ::windows_java::params
 
   $_splitversion = split($version,'[uU]')
@@ -73,18 +76,18 @@ define windows_java::jdk (
   }
 
   if $install_name == undef {
-    $_installBase = "${::windows_java::params::jdk_base_install_name} ${_major}"
-    $_installUpdate =  $_update ?{
+    $_install_base = "${::windows_java::params::jdk_base_install_name} ${_major}"
+    $_install_update =  $_update ?{
       /\d+/   => " Update ${_update}",
       default => '',
     }
-    $_installArch =  $_arch_version ? {
+    $_install_arch =  $_arch_version ? {
       'x64'   => ' (64-bit)',
       default => '',
     }
-    $_installName = "${_installBase}${_installUpdate}${_installArch}"
+    $_install_name = "${_install_base}${_install_update}${_install_arch}"
   } else {
-    $_installName = $install_name
+    $_install_name = $install_name
   }
 
   if has_key($_build_hash, $version) {
@@ -105,21 +108,18 @@ define windows_java::jdk (
       $_remote_source = $source
       $_filename = filename($_remote_source)
     }
-  ##
-  # Install Paths
-  #
-  ##
+
     if $::architecture == 'x86_64' and $_arch_version == 'i586'{
       $_base_install_path = 'C:\Program Files (x86)\Java'
     } else{
       $_base_install_path = 'C:\Program Files\Java'
     }
-    $_installPath = $install_path ? {
+    $_install_path = $install_path ? {
       undef   => "${_base_install_path}\\jdk1.${_major}.0_${_update}",
       default => $install_path,
     }
 
-    $_tempLocation = "${temp_target}\\${_filename}"
+    $_temp_location = "${temp_target}\\${_filename}"
 
     download_file { "download-${_filename}":
       url                   => $_remote_source,
@@ -127,19 +127,20 @@ define windows_java::jdk (
       destination_file      => $_filename,
       cookies               => [$::windows_java::params::cookie_string],
     }->
-    windows_java::install{ $_installName:
+    windows_java::install{ $_install_name:
       ensure       => $ensure,
-      source       => $_tempLocation,
-      install_path => $_installPath,
+      source       => $_temp_location,
+      install_path => $_install_path,
     }
-    validate_bool($default)
+
     if($default == true){
-      class{ 'windows_java::java_home':
-        install_path => $_installPath,
-        require      => Windows_java::Install[$_installName] }
+      class{ '::windows_java::java_home':
+        install_path => $_install_path,
+        require      => Windows_java::Install[$_install_name],
+      }
     }
   } else{
-    package{ $_installName:
+    package{ $_install_name:
       ensure   => $ensure,
       provider => windows,
     }
