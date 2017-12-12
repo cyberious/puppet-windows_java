@@ -30,25 +30,27 @@ This module can be used to install one or multiple JDK versions from Oracle
 
 ### Beginning with windows_java
 
-####Install Oracle JDK Version 8u45
+####Install Oracle JDK Version 8u45 by default
 ~~~puppet
- include 'windows_java'
+ include '::windows_java'
 ~~~
 
- This will install Oracle JDK version 8 update 45
+ This will install Oracle JDK version 8 update 45 by default
 
 ## Usage
 
 ####Install JDK 7u51 and not as default
 ~~~puppet
-windows_java::jdk{'7u51':
+class { '::windows_java':
+  version => '7u51',
   default => false,
 }
 ~~~
 
 ####Install JDK 7u51 non default location
 ~~~puppet
-windows_java::jdk{'7u51':
+class { '::windows_java':
+  version      => '7u51',
   install_path => 'G:\java\jdk7u51',
   default      => false,
 }
@@ -63,15 +65,6 @@ windows_java::jdk{'7u51':
 * `ensure`: *Optional.* Whether to install or remove the version
 * `version`: *Optional.* What version of the jdk to install.  Defaults to '8u45'
 * `arch`: *Optional.* What architecture you want to install, Valid options are 'x64','i586'.  Default is: `$::architecture`
-* `default`: *Optional.* Whether to update and set the JAVA_HOME and include in PATH environment variables
-
-### Types
-
-#### `windows_java::jdk`
-
-* `ensure`: *Optional.* Whether to install or remove the version
-* `version`: *Optional.* What version of the jdk to install.  Defaults to '8u45'
-* `arch`: *Optional.* What architecture you want to install, Valid options are 'x64','i586'.  Default is: `$::architecture`
 * `build_number_hash`: *Optional.* Build number lookup hash for looking up url build numbers `{'8u45' => 'b15' }`
 * `cookie_string`: *Optional.* The cookie string required to download the JDK from Oracle
 * `default`: *Optional.* Whether to update and set the JAVA_HOME and include in PATH environment variables
@@ -79,4 +72,3 @@ windows_java::jdk{'7u51':
 * `install_path`: *Optional.* The location to install JDK to.
 * `source`: *Optional.* Alternate source to download from, can be puppet:// http(s):// url
 * `temp_target`: *Optional.* Temp target for downloading the JDK installer to, defaults to ENV['TEMP']
-

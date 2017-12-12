@@ -1,7 +1,7 @@
 define windows_java::install (
   $install_path,
   $source,
-  $ensure = 'present',
+  $ensure       = 'present',
   $package_name = $name,
 ){
   $_options =  ['/s',{ 'INSTALLDIR' => $install_path }]
@@ -9,6 +9,6 @@ define windows_java::install (
     ensure          => $ensure,
     provider        => windows,
     source          => $source,
-    install_options => $_options
+    install_options => $_options,
   }
 }

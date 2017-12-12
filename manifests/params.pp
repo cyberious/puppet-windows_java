@@ -1,9 +1,8 @@
 class windows_java::params {
   $jdk_base_install_name = 'Java SE Development Kit'
-  $cookie_string = 'oraclelicense=accept-securebackup-cookie;gpw_e24=http://edelivery.oracle.com'
-  $root_url = 'http://download.oracle.com/otn-pub/java/jdk'
-
-  $build_numbers_hash = {
+  $cookie_string         = 'oraclelicense=accept-securebackup-cookie;gpw_e24=http://edelivery.oracle.com'
+  $root_url              = 'http://download.oracle.com/otn-pub/java/jdk'
+  $build_numbers_hash    = {
     '8u45' => 'b15',
     '8u40' => 'b26',
     '8u31' => 'b13',
