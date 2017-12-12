@@ -126,8 +126,8 @@ define windows_java::jdk (
       destination_directory => $temp_target,
       destination_file      => $_filename,
       cookies               => [$::windows_java::params::cookie_string],
-    }->
-    windows_java::install{ $_install_name:
+    }
+    -> windows_java::install{ $_install_name:
       ensure       => $ensure,
       source       => $_temp_location,
       install_path => $_install_path,
