@@ -2,7 +2,7 @@ fixtures:
   repositories:
     windows_env: "git://github.com/badgerious/puppet-windows-env.git"
     powershell: "git://github.com/puppetlabs/puppetlabs-powershell.git"
-    download_file: "git@github.com:voxpupuli/puppet-download_file.git"
+    download_file: "git://github.com/voxpupuli/puppet-download_file.git"
     stdlib: "git://github.com/puppetlabs/puppetlabs-stdlib.git"
     module_data: "git://github.com/ripienaar/puppet-module-data.git"
   symlinks:
