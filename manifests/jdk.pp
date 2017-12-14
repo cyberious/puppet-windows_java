@@ -56,7 +56,7 @@ define windows_java::jdk (
   $temp_target       = $::windows_java_temp,
 ) {
 
-  validate_legacy(Boolean, 'validate_bool', $default)
+  validate_bool($default)
   include ::windows_java::params
 
   $_splitversion = split($version,'[uU]')
