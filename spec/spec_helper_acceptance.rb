@@ -40,7 +40,7 @@ hw4EbNX/3aBd7YdStysVAq45pmp06drE57xNNB6pXE0zX5IJL4hmXXeXxx12E6nV
     on host, "chmod 644 geotrustglobal.pem"
     on host, "cmd /c certutil -v -addstore Root `cygpath -w geotrustglobal.pem`"
   end
-  ['puppetlabs-stdlib', 'badgerious-windows_env', 'cyberious-pget'].each { |dep_module|
+  ['puppetlabs-stdlib', 'badgerious-windows_env', 'puppet-download_file'].each { |dep_module|
     on host, puppet("module install #{dep_module}"), {:acceptable_exit_codes => [0, 1]}
   }
 end

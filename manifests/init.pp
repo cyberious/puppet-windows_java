@@ -29,15 +29,27 @@
 # Copyright 2013 Your name here, unless otherwise noted.
 #
 class windows_java (
-  $ensure = 'present',
-  $version = '8u45',
-  $arch = $::architecture,
-  $default = true,
+  $ensure            = 'present',
+  $version           = '8u45',
+  $arch              = $::architecture,
+  $build_number_hash = undef,
+  $cookie_string     = undef,
+  $default           = true,
+  $install_name      = undef,
+  $install_path      = undef,
+  $source            = undef,
+  $temp_target       = $::windows_java_temp,
 ) {
-  windows_java::jdk{ $name:
-    ensure  => $ensure,
-    version => $version,
-    default => $default,
-    arch    => $arch,
+  windows_java::jdk{ $version:
+    ensure            => $ensure,
+    version           => $version,
+    arch              => $arch,
+    build_number_hash => $build_number_hash,
+    cookie_string     => $cookie_string,
+    default           => $default,
+    install_name      => $install_name,
+    install_path      => $install_path,
+    source            => $source,
+    temp_target       => $::windows_java_temp,
   }
 }
